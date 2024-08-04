@@ -150,6 +150,8 @@ class RockolaGUI:
         self.current_album_index = 0
         self.albums = []
         self.song_number_buffer = ""
+        self.selected_song_label = None
+        self.artist_selection_index = {}
 
         self.root.title("Rockola")
         self.root.geometry("800x620")
@@ -329,17 +331,55 @@ class RockolaGUI:
         # Manejar las pulsaciones de teclas
         if event.char.isdigit():
             self.song_number_buffer += event.char
+            self.highlight_song_entry()  # Resaltar la entrada de la canción
+        elif event.char.isalpha():
+            self.select_artist_by_letter(event.char.upper())
         if len(self.song_number_buffer) == 2:
+            self.selected_song_label = self.song_number_buffer
+        if event.keysym == 'Return':
             self.process_song_entry()
             self.song_number_buffer = ""
-        if event.keysym == 'Left':
-            self.scroll_left(event)
-        elif event.keysym == 'Right':
-            self.scroll_right(event)
+            self.selected_song_label = None
+        if event.keysym == 'Escape':
+            self.clear_song_selection()
+            self.song_number_buffer = ""
+
+    def select_artist_by_letter(self, letter):
+        # Seleccionar artista por letra
+        if letter not in self.artist_selection_index:
+            self.artist_selection_index[letter] = 0
+        else:
+            self.artist_selection_index[letter] += 1
+        
+        matching_bands = [band for band in self.rockola.bands if band.upper().startswith(letter)]
+        if matching_bands:
+            index = self.artist_selection_index[letter] % len(matching_bands)
+            selected_band = matching_bands[index]
+            self.current_album_index = next((i for i, album in enumerate(self.albums) if album[2] == selected_band), 0)
+            self.show_album()
+
+    def highlight_song_entry(self):
+        # Resaltar la canción seleccionada
+        song_number = self.song_number_buffer
+        for widget in self.song_frame.winfo_children():
+            listbox = widget.winfo_children()[0]
+            for index in range(listbox.size()):
+                song = listbox.get(index)
+                if song.startswith(song_number):
+                    listbox.itemconfig(index, {'bg': 'green', 'fg': 'black'})
+                else:
+                    listbox.itemconfig(index, {'bg': 'black', 'fg': 'white'})
+
+    def clear_song_selection(self):
+        # Limpiar la selección de la canción
+        for widget in self.song_frame.winfo_children():
+            listbox = widget.winfo_children()[0]
+            for index in range(listbox.size()):
+                listbox.itemconfig(index, {'bg': 'black', 'fg': 'white'})
 
     def process_song_entry(self):
         # Procesar la entrada de número de canción
-        song_number = self.song_number_buffer
+        song_number = self.selected_song_label
         if not song_number:
             return
         band, album_type, album = self.current_album
