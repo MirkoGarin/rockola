@@ -24,11 +24,9 @@ Sigue estos pasos para instalar y ejecutar Rockola en tu sistema:
 ```sh
    Clona este repositorio en tu máquina local:
    git clone https://github.com/mirkogarin/rockola.git
-   cd rockola
-   python -m venv env
-   source env/bin/activate  # En Windows usa `env\Scripts\activate`
-   pip install -r requirements.txt
-   Ejecuta la aplicación: python rockola.py
+   Asegúrate de tener los archivos rockola.py, install_and_run.sh, icono.png en el mismo directorio.
+   eJECUTA chmod +x install_and_run.sh
+   Ejecuta el script install_and_run.sh
    
 ## Formato de carpeta
 
