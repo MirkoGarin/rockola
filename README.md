@@ -60,6 +60,9 @@ Uso:
     Ingresa el número de la canción que deseas reproducir. La canción seleccionada se pondrá en verde.
     Presiona Enter para reproducir la canción o Escape para deseleccionarla y elegir otra.
     La información de la canción que se está reproduciendo se mostrará en la parte inferior de la ventana.
+    Funcionalidad para seleccionar artistas por letra.
+    Cuando se presiona una letra, seleccionará el primer artista cuyo nombre comience con esa letra.
+    Al presionar la misma letra nuevamente, se avanzará al siguiente artista que comience con esa letra
 
 Contribuciones
 
